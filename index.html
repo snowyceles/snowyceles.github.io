@@ -38,6 +38,36 @@
       margin-top: 20px;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/minecraft-query"></script>
+  <script>
+    // Function to update the player count on the webpage
+    function updatePlayerCount() {
+      const serverIP = 'luminoceles.aternos.me'; // Replace with your Aternos server domain or IP address
+
+      // Get the current server port from the "data-port" attribute of the server status element
+      const serverPortElement = document.getElementById('serverPort');
+      const serverPort = serverPortElement.getAttribute('data-port');
+
+      const query = MinecraftQuery.createInstance({
+        host: serverIP,
+        port: serverPort,
+        timeout: 2000 // Set a timeout value in milliseconds
+      });
+
+      query.fullStat().then((result) => {
+        const playerCount = result.players.online;
+        document.getElementById('playerCount').textContent = playerCount;
+      }).catch((error) => {
+        console.error('Error querying Minecraft server:', error);
+      });
+    }
+
+    // Call the updatePlayerCount function when the page loads
+    window.addEventListener('load', updatePlayerCount);
+
+    // Set an interval to update the player count every minute (adjust as needed)
+    setInterval(updatePlayerCount, 60000);
+  </script>
 </head>
 
 <body>
@@ -52,11 +82,8 @@
     <h3>Server Information</h3>
     <ul>
       <li>Server IP:
-        <code>
-          luminoceles.aternos.me
-        </code>
+        <code id="serverPort" data-port="25565">luminoceles.aternos.me</code> <!-- Update the "data-port" attribute with the current server port -->
       </li>
-
     </ul>
 
     <h3>Server Rules</h3>
@@ -70,9 +97,10 @@
       <a href="https://discord.gg/D9FuHUFZb8" target="_blank" class="discord-button">
         <img src="/discord-button600.png" alt="Join our Discord server" width="200" height="50">
       </a>
+
+      <p>Players Online: <span id="playerCount"></span></p> <!-- Player count will be displayed here -->
     </div>
   </div>
 
-</body>
+</body
 
-</html>
